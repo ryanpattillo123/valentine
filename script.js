@@ -54,6 +54,15 @@ yesBtn.addEventListener('click', () => {
 
 // No button hover - Make dogs sad
 noBtn.addEventListener('mouseenter', () => {
+    makeDogsSad();
+});
+
+// No button touch start - Make dogs sad on mobile
+noBtn.addEventListener('touchstart', (e) => {
+    makeDogsSad();
+});
+
+function makeDogsSad() {
     const allDogs = document.querySelectorAll('.dog');
     allDogs.forEach((dog, index) => {
         dog.classList.add('sad');
@@ -69,10 +78,19 @@ noBtn.addEventListener('mouseenter', () => {
     
     // Change background to darker
     document.body.style.background = 'linear-gradient(135deg, #94a3b8 0%, #64748b 50%, #475569 100%)';
-});
+}
 
 // No button leave - Restore dogs
 noBtn.addEventListener('mouseleave', () => {
+    restoreDogs();
+});
+
+// No button touch end - Restore dogs on mobile
+noBtn.addEventListener('touchend', () => {
+    restoreDogs();
+});
+
+function restoreDogs() {
     const allDogs = document.querySelectorAll('.dog');
     allDogs.forEach((dog, index) => {
         dog.classList.remove('sad');
@@ -88,7 +106,7 @@ noBtn.addEventListener('mouseleave', () => {
     
     // Restore background
     document.body.style.background = 'linear-gradient(135deg, #ffd1dc 0%, #ffb6c1 50%, #ff69b4 100%)';
-});
+}
 
 // Make No button even worse on click
 noBtn.addEventListener('click', (e) => {
@@ -97,12 +115,22 @@ noBtn.addEventListener('click', (e) => {
     // Create more sad dogs
     createDogs(12);
     const allDogs = document.querySelectorAll('.dog');
-    allDogs.forEach(dog => {
+    allDogs.forEach((dog, index) => {
         dog.classList.add('sad');
+        const dogEmoji = dog.querySelector('.dog-emoji');
+        if (dogEmoji) {
+            dogEmoji.textContent = sadDogEmojis[index % sadDogEmojis.length];
+        }
     });
     
     // Show dramatic message
     alert('💔 You made the dogs cry! Please reconsider... 😢');
+    
+    // Restore after alert
+    setTimeout(() => {
+        createDogs(8);
+        restoreDogs();
+    }, 100);
     
     // Make Yes button bigger and more appealing
     yesBtn.style.transform = 'scale(1.3)';

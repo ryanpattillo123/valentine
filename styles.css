@@ -217,6 +217,12 @@ body {
     box-shadow: 0 8px 25px rgba(34, 197, 94, 0.6);
 }
 
+/* Mobile touch feedback for Yes button */
+.yes-btn:active {
+    transform: scale(1.05);
+    box-shadow: 0 8px 25px rgba(34, 197, 94, 0.6);
+}
+
 .no-btn {
     background: linear-gradient(135deg, #ef4444, #dc2626);
     color: white;
@@ -225,6 +231,12 @@ body {
 
 .no-btn:hover {
     animation: terribleShake 0.3s ease-in-out infinite;
+}
+
+/* Mobile touch feedback */
+.no-btn:active {
+    animation: terribleShake 0.3s ease-in-out infinite;
+    transform: scale(0.95);
 }
 
 @keyframes terribleShake {
