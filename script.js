@@ -6,24 +6,10 @@ const warning = document.getElementById('warning');
 const sadOverlay = document.getElementById('sadOverlay');
 const happyDogsContainer = document.getElementById('happyDogs');
 
-// Real dog GIFs!
-const happyDogGifs = [
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/mCRJDo24UvJMA/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4Zo41lhzKt6iZ8xff9/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xT9IgvEOwRzUcZDRiU/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/pPs4HwdYb46fWfmSSy/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/l3q2MDnkLri1t7i5a/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/KctrWMQ7u9D2du0YmD/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/xUA7b7v9ngUmGHSxj2/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/QvBoMEcQ7DQXK/giphy.gif'
-];
-
-const sadDogGifs = [
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/d2lcHJTG5Tscg/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kaBU6pgv0OsPHz2yxy/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8McNH1aXZnVyE/giphy.gif',
-    'https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExYXp2eWx6ZjBxdHVtYmN2cTF5dWJ6ZGt5YnZ5dWJ6ZGt5YnZ5dWJ6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/j9GASQ5ocrIRicUFmj/giphy.gif'
-];
+// Dog emojis - always work, no loading issues!
+const happyDogEmojis = ['🐕', '🐶', '🐕‍🦺', '🦮', '🐩', '🐾'];
+const sadDogEmojis = ['😢🐕', '😭🐶', '💔🐕', '😞🦮'];
+const floatingDogEmojis = ['🐕', '🐶', '🦴', '🐾'];
 
 // Create initial happy dogs
 function createDogs(count) {
@@ -32,17 +18,17 @@ function createDogs(count) {
         const dog = document.createElement('div');
         dog.className = 'dog';
         
-        const img = document.createElement('img');
-        img.src = happyDogGifs[i % happyDogGifs.length];
-        img.alt = 'Happy dog';
-        img.className = 'dog-img';
+        const dogEmoji = document.createElement('div');
+        dogEmoji.textContent = happyDogEmojis[i % happyDogEmojis.length];
+        dogEmoji.className = 'dog-emoji';
         
-        const treat = document.createElement('span');
-        treat.className = 'treat';
-        treat.textContent = '🦴';
+        // Create floating dog
+        const floatingDog = document.createElement('div');
+        floatingDog.textContent = floatingDogEmojis[i % floatingDogEmojis.length];
+        floatingDog.className = 'floating-dog-emoji';
         
-        dog.appendChild(img);
-        dog.appendChild(treat);
+        dog.appendChild(dogEmoji);
+        dog.appendChild(floatingDog);
         dog.style.animationDelay = `${Math.random() * 2}s`;
         dogsContainer.appendChild(dog);
     }
@@ -71,10 +57,10 @@ noBtn.addEventListener('mouseenter', () => {
     const allDogs = document.querySelectorAll('.dog');
     allDogs.forEach((dog, index) => {
         dog.classList.add('sad');
-        // Change to sad dog GIF
-        const img = dog.querySelector('.dog-img');
-        if (img) {
-            img.src = sadDogGifs[index % sadDogGifs.length];
+        // Change to sad dog emoji
+        const dogEmoji = dog.querySelector('.dog-emoji');
+        if (dogEmoji) {
+            dogEmoji.textContent = sadDogEmojis[index % sadDogEmojis.length];
         }
     });
     
@@ -90,10 +76,10 @@ noBtn.addEventListener('mouseleave', () => {
     const allDogs = document.querySelectorAll('.dog');
     allDogs.forEach((dog, index) => {
         dog.classList.remove('sad');
-        // Change back to happy dog GIF
-        const img = dog.querySelector('.dog-img');
-        if (img) {
-            img.src = happyDogGifs[index % happyDogGifs.length];
+        // Change back to happy dog emoji
+        const dogEmoji = dog.querySelector('.dog-emoji');
+        if (dogEmoji) {
+            dogEmoji.textContent = happyDogEmojis[index % happyDogEmojis.length];
         }
     });
     
@@ -126,16 +112,10 @@ noBtn.addEventListener('click', (e) => {
 // Create happy dogs for celebration
 function createHappyDogs() {
     happyDogsContainer.innerHTML = '';
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 20; i++) {
         const dog = document.createElement('div');
         dog.className = 'happy-dog';
-        
-        const img = document.createElement('img');
-        img.src = happyDogGifs[i % happyDogGifs.length];
-        img.alt = 'Happy dog';
-        img.className = 'celebration-dog-img';
-        
-        dog.appendChild(img);
+        dog.textContent = happyDogEmojis[i % happyDogEmojis.length];
         dog.style.animationDelay = `${Math.random() * 1}s`;
         happyDogsContainer.appendChild(dog);
     }

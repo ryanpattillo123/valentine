@@ -63,6 +63,11 @@ body {
     position: relative;
 }
 
+.dog-emoji {
+    font-size: 5rem;
+    transition: all 0.5s ease;
+}
+
 .dog-img {
     width: 150px;
     height: 150px;
@@ -80,6 +85,26 @@ body {
     animation: float 2s ease-in-out infinite;
 }
 
+.floating-dog-img {
+    position: absolute;
+    top: -30px;
+    right: -20px;
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    animation: float 2s ease-in-out infinite;
+    box-shadow: 0 3px 10px rgba(255, 105, 180, 0.3);
+}
+
+.floating-dog-emoji {
+    position: absolute;
+    top: -30px;
+    right: -20px;
+    font-size: 2.5rem;
+    animation: float 2s ease-in-out infinite;
+}
+
 @keyframes bounce {
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(-10px); }
@@ -94,6 +119,11 @@ body {
     animation: shake 0.5s ease-in-out infinite;
 }
 
+.dog.sad .dog-emoji {
+    filter: grayscale(100%) brightness(0.7);
+    opacity: 0.7;
+}
+
 .dog.sad .dog-img {
     filter: grayscale(100%) brightness(0.7);
     opacity: 0.7;
@@ -102,6 +132,16 @@ body {
 .dog.sad .treat {
     content: '💔';
     animation: fall 1s ease-in forwards;
+}
+
+.dog.sad .floating-dog-img {
+    animation: fall 1s ease-in forwards;
+    filter: grayscale(100%);
+}
+
+.dog.sad .floating-dog-emoji {
+    animation: fall 1s ease-in forwards;
+    filter: grayscale(100%);
 }
 
 @keyframes shake {
@@ -119,6 +159,11 @@ body {
 
 .dog.super-happy {
     animation: jump 0.6s ease-in-out infinite;
+}
+
+.dog.super-happy .dog-emoji {
+    filter: brightness(1.5);
+    transform: scale(1.2);
 }
 
 .dog.super-happy .dog-img {
@@ -259,10 +304,12 @@ body {
     flex-wrap: wrap;
     justify-content: center;
     gap: 20px;
+    font-size: 4rem;
 }
 
 .happy-dog {
     animation: celebrate 1s ease-in-out infinite;
+    font-size: 4rem;
 }
 
 .celebration-dog-img {
@@ -316,9 +363,17 @@ body {
         font-size: 2rem;
     }
     
+    .dog-emoji {
+        font-size: 3.5rem;
+    }
+    
     .dog-img {
         width: 100px;
         height: 100px;
+    }
+    
+    .floating-dog-emoji {
+        font-size: 2rem;
     }
     
     .btn {
@@ -333,6 +388,10 @@ body {
     
     .celebration-content p {
         font-size: 1.5rem;
+    }
+    
+    .happy-dog {
+        font-size: 3rem;
     }
     
     .celebration-dog-img {
