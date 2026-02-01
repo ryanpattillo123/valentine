@@ -1,149 +1,163 @@
 const yesBtn = document.getElementById('yesBtn');
 const noBtn = document.getElementById('noBtn');
 const celebration = document.getElementById('celebration');
-const valentineGif = document.getElementById('valentineGif');
+const dogsContainer = document.getElementById('dogsContainer');
+const warning = document.getElementById('warning');
+const sadOverlay = document.getElementById('sadOverlay');
+const happyDogsContainer = document.getElementById('happyDogs');
 
-let noClickCount = 0;
-let yesBtnSize = 1;
+// Different dog emojis
+const dogEmojis = ['🐕', '🐶', '🐕‍🦺', '🐩', '🦮', '🐕'];
 
-// Messages that appear on the No button
-const noMessages = [
-    "No",
-    "Are you sure?",
-    "Really?",
-    "Think again!",
-    "Don't be shy!",
-    "Give it a chance!",
-    "Pretty please?",
-    "You'll regret it!",
-    "Last chance!",
-    "I'll cry 😢",
-    "..."
-];
+// Create initial happy dogs
+function createDogs(count) {
+    dogsContainer.innerHTML = '';
+    for (let i = 0; i < count; i++) {
+        const dog = document.createElement('div');
+        dog.className = 'dog';
+        dog.textContent = dogEmojis[Math.floor(Math.random() * dogEmojis.length)];
+        dog.style.animationDelay = `${Math.random() * 2}s`;
+        dogsContainer.appendChild(dog);
+    }
+}
 
-// Different cute/sad GIFs that change when hovering over No
-const sadGifs = [
-    "https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHBxdmN5aWU4ZG5rZjhvdHlpYnI2eGZ5cXZ6YzJ6M3F6cXl6YzJ6YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif",
-    "https://media.giphy.com/media/L95W4wv8nnb9K/giphy.gif",
-    "https://media.giphy.com/media/kgKrO1A3JbWTK/giphy.gif",
-    "https://media.giphy.com/media/ROF8OQvDmxytW/giphy.gif"
-];
+// Initialize with 8 dogs
+createDogs(8);
 
-// Yes button click handler
+// Yes button click handler - SAVE THE DOGS!
 yesBtn.addEventListener('click', () => {
     celebration.classList.remove('hidden');
-    createHeartRain();
+    createHappyDogs();
     
-    // Play celebration sound (optional - commented out as it needs audio file)
-    // const audio = new Audio('celebration.mp3');
-    // audio.play();
+    // Create treats falling animation
+    createTreatRain();
+    
+    // Make all dogs super happy
+    const allDogs = document.querySelectorAll('.dog');
+    allDogs.forEach(dog => {
+        dog.classList.add('super-happy');
+    });
 });
 
-// Make the No button run away from the cursor
+// No button hover - Make dogs sad
 noBtn.addEventListener('mouseenter', () => {
-    const container = document.querySelector('.container');
-    const containerRect = container.getBoundingClientRect();
-    const btnRect = noBtn.getBoundingClientRect();
+    const allDogs = document.querySelectorAll('.dog');
+    allDogs.forEach(dog => {
+        dog.classList.add('sad');
+    });
     
-    // Calculate random position within container
-    const maxX = containerRect.width - btnRect.width - 40; // 40 for padding
-    const maxY = 200; // vertical range
+    warning.classList.add('show');
+    sadOverlay.classList.remove('hidden');
     
-    const randomX = Math.random() * maxX - maxX/2;
-    const randomY = Math.random() * maxY - maxY/2;
-    
-    noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
-    
-    // Change the button text
-    noClickCount++;
-    if (noClickCount < noMessages.length) {
-        noBtn.textContent = noMessages[noClickCount];
-    }
-    
-    // Make Yes button bigger with each No hover
-    yesBtnSize += 0.1;
-    yesBtn.style.transform = `scale(${yesBtnSize})`;
-    
-    // Change to a sad GIF
-    const randomGif = sadGifs[Math.floor(Math.random() * sadGifs.length)];
-    valentineGif.src = randomGif;
-    
-    // Shrink the No button
-    const currentScale = 1 - (noClickCount * 0.1);
-    if (currentScale > 0.3) {
-        noBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(${currentScale})`;
-    } else {
-        // Make it nearly impossible to click
-        noBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(0.3)`;
-    }
+    // Change background to darker
+    document.body.style.background = 'linear-gradient(135deg, #94a3b8 0%, #64748b 50%, #475569 100%)';
 });
 
-// Make No button even harder to click on mobile
-noBtn.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
+// No button leave - Restore dogs
+noBtn.addEventListener('mouseleave', () => {
+    const allDogs = document.querySelectorAll('.dog');
+    allDogs.forEach(dog => {
+        dog.classList.remove('sad');
+    });
     
-    // Move the button away from touch
-    const container = document.querySelector('.container');
-    const containerRect = container.getBoundingClientRect();
+    warning.classList.remove('show');
+    sadOverlay.classList.add('hidden');
     
-    const randomX = Math.random() * 200 - 100;
-    const randomY = Math.random() * 200 - 100;
-    
-    noBtn.style.transform = `translate(${randomX}px, ${randomY}px) scale(${Math.max(0.3, 1 - noClickCount * 0.1)})`;
-    
-    noClickCount++;
-    if (noClickCount < noMessages.length) {
-        noBtn.textContent = noMessages[noClickCount];
-    }
-    
-    yesBtnSize += 0.15;
-    yesBtn.style.transform = `scale(${yesBtnSize})`;
+    // Restore background
+    document.body.style.background = 'linear-gradient(135deg, #ffd1dc 0%, #ffb6c1 50%, #ff69b4 100%)';
 });
 
-// If they somehow click No, make it do nothing or make Yes bigger
+// Make No button even worse on click
 noBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    yesBtnSize += 0.3;
-    yesBtn.style.transform = `scale(${yesBtnSize})`;
     
-    // Shake animation
-    noBtn.style.animation = 'shake 0.5s';
-    setTimeout(() => {
-        noBtn.style.animation = '';
-    }, 500);
+    // Create more sad dogs
+    createDogs(12);
+    const allDogs = document.querySelectorAll('.dog');
+    allDogs.forEach(dog => {
+        dog.classList.add('sad');
+    });
+    
+    // Show dramatic message
+    alert('💔 You made the dogs cry! Please reconsider... 😢');
+    
+    // Make Yes button bigger and more appealing
+    yesBtn.style.transform = 'scale(1.3)';
+    yesBtn.style.animation = 'pulse 0.5s ease-in-out infinite';
 });
 
-// Create falling hearts animation
-function createHeartRain() {
-    const heartRain = document.querySelector('.heart-rain');
-    const hearts = ['❤️', '💕', '💖', '💗', '💝', '💘', '💓'];
+// Create happy dogs for celebration
+function createHappyDogs() {
+    happyDogsContainer.innerHTML = '';
+    for (let i = 0; i < 15; i++) {
+        const dog = document.createElement('div');
+        dog.className = 'happy-dog';
+        dog.textContent = dogEmojis[Math.floor(Math.random() * dogEmojis.length)];
+        dog.style.animationDelay = `${Math.random() * 1}s`;
+        happyDogsContainer.appendChild(dog);
+    }
+}
+
+// Create falling treats animation
+function createTreatRain() {
+    const treats = ['🦴', '🥩', '🌭', '🍖'];
+    const celebrationEl = document.getElementById('celebration');
     
     for (let i = 0; i < 50; i++) {
         setTimeout(() => {
-            const heart = document.createElement('div');
-            heart.className = 'heart';
-            heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
-            heart.style.left = Math.random() * 100 + '%';
-            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            heart.style.fontSize = (Math.random() * 2 + 1) + 'rem';
-            heartRain.appendChild(heart);
+            const treat = document.createElement('div');
+            treat.style.position = 'absolute';
+            treat.style.fontSize = '2rem';
+            treat.style.left = Math.random() * 100 + '%';
+            treat.style.top = '-50px';
+            treat.textContent = treats[Math.floor(Math.random() * treats.length)];
+            treat.style.animation = 'treatFall 3s linear forwards';
+            treat.style.zIndex = '1';
+            celebrationEl.appendChild(treat);
             
-            // Remove heart after animation
             setTimeout(() => {
-                heart.remove();
-            }, 5000);
+                treat.remove();
+            }, 3000);
         }, i * 100);
     }
 }
 
-// Add shake animation to CSS dynamically
+// Add treat fall animation dynamically
 const style = document.createElement('style');
 style.textContent = `
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-10px); }
-        75% { transform: translateX(10px); }
+    @keyframes treatFall {
+        0% {
+            top: -50px;
+            transform: rotate(0deg);
+            opacity: 1;
+        }
+        100% {
+            top: 110%;
+            transform: rotate(360deg);
+            opacity: 0.8;
+        }
     }
 `;
 document.head.appendChild(style);
+
+// Add dog interactions - pet the dogs!
+dogsContainer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('dog') && !e.target.classList.contains('sad')) {
+        e.target.style.transform = 'scale(1.5)';
+        setTimeout(() => {
+            e.target.style.transform = 'scale(1)';
+        }, 300);
+        
+        // Add a heart temporarily
+        const heart = document.createElement('span');
+        heart.textContent = '❤️';
+        heart.style.position = 'absolute';
+        heart.style.fontSize = '2rem';
+        heart.style.animation = 'float 1s ease-out forwards';
+        e.target.appendChild(heart);
+        
+        setTimeout(() => {
+            heart.remove();
+        }, 1000);
+    }
+});

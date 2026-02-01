@@ -3,28 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Be My Valentine? 💝</title>
+    <title>Be My Valentine? 🐶💝</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
         <h1 class="title">Will you be my Valentine? 💝</h1>
-        <div class="gif-container">
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcHBxdmN5aWU4ZG5rZjhvdHlpYnI2eGZ5cXZ6YzJ6M3F6cXl6YzJ6YyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MDJ9IbxxvDUQM/giphy.gif" alt="Cute puppy" id="valentineGif">
+        <p class="subtitle">The dogs are counting on you...</p>
+        
+        <div class="dogs-container" id="dogsContainer">
+            <!-- Dogs will be generated here -->
         </div>
+
         <div class="button-container">
-            <button id="yesBtn" class="btn yes-btn">Yes! 💕</button>
-            <button id="noBtn" class="btn no-btn">No</button>
+            <button id="yesBtn" class="btn yes-btn">
+                YES! 🦴
+                <span class="btn-subtitle">Give all dogs treats!</span>
+            </button>
+            <button id="noBtn" class="btn no-btn">
+                No 😢
+                <span class="btn-subtitle">Take away their treats...</span>
+            </button>
+        </div>
+
+        <div class="warning" id="warning">
+            ⚠️ Hovering over "No" makes the dogs sad! ⚠️
         </div>
     </div>
     
-    <!-- Celebration overlay -->
+    <!-- Happy ending overlay -->
     <div id="celebration" class="celebration hidden">
         <div class="celebration-content">
             <h1>YAAAY! 🎉💕🎊</h1>
-            <p>You've made me the happiest! 💝</p>
-            <div class="heart-rain"></div>
+            <p>You saved all the dogs! They're so happy! 🐕🦴</p>
+            <div class="happy-dogs" id="happyDogs">
+                <!-- Happy dogs will appear here -->
+            </div>
         </div>
+    </div>
+
+    <!-- Sad overlay when hovering No -->
+    <div id="sadOverlay" class="sad-overlay hidden">
+        <p class="sad-message">The dogs are getting scared... 😢</p>
     </div>
 
     <script src="script.js"></script>
