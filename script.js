@@ -11,20 +11,30 @@ const happyDogEmojis = ['🐕', '🐶', '🐕‍🦺', '🦮', '🐩', '🐾'];
 const sadDogEmojis = ['😢🐕', '😭🐶', '💔🐕', '😞🦮'];
 const floatingDogEmojis = ['🐕', '🐶', '🦴', '🐾'];
 
+// Wicked theme emojis
+const wickedHappyEmojis = ['💚', '✨', '🎭', '🌟', '💫', '🎪'];
+const wickedSadEmojis = ['🧙‍♀️', '🖤', '💀', '🌑'];
+const wickedFloatingEmojis = ['🧹', '🔮', '⚡', '🌪️'];
+
 // Create initial happy dogs
 function createDogs(count) {
     dogsContainer.innerHTML = '';
+    
+    // Use Wicked emojis if it's the Wicked theme
+    const mainEmojis = isWickedTheme ? wickedHappyEmojis : happyDogEmojis;
+    const floatEmojis = isWickedTheme ? wickedFloatingEmojis : floatingDogEmojis;
+    
     for (let i = 0; i < count; i++) {
         const dog = document.createElement('div');
         dog.className = 'dog';
         
         const dogEmoji = document.createElement('div');
-        dogEmoji.textContent = happyDogEmojis[i % happyDogEmojis.length];
+        dogEmoji.textContent = mainEmojis[i % mainEmojis.length];
         dogEmoji.className = 'dog-emoji';
         
         // Create floating dog
         const floatingDog = document.createElement('div');
-        floatingDog.textContent = floatingDogEmojis[i % floatingDogEmojis.length];
+        floatingDog.textContent = floatEmojis[i % floatEmojis.length];
         floatingDog.className = 'floating-dog-emoji';
         
         dog.appendChild(dogEmoji);
@@ -34,8 +44,16 @@ function createDogs(count) {
     }
 }
 
-// Initialize with 8 dogs
-createDogs(8);
+// Initialize with custom dog count (set by router.js) or default to 8
+let initialDogCount = 8;
+let isWickedTheme = false;
+
+// Wait for initialization
+window.addEventListener('DOMContentLoaded', () => {
+    initialDogCount = window.initialDogCount || 8;
+    isWickedTheme = window.wickedTheme || false;
+    createDogs(initialDogCount);
+});
 
 let dogsSad = false;
 
@@ -52,11 +70,75 @@ yesBtn.addEventListener('click', () => {
     allDogs.forEach(dog => {
         dog.classList.add('super-happy');
     });
+    
+    // Play audio if it's the Wicked theme
+    if (isWickedTheme) {
+        // Use Web Speech API to "sing" with more natural rhythm
+        if ('speechSynthesis' in window) {
+            const lyricPhrases = [
+                { text: "Dan-cing", pitch: 1.4, rate: 1.3, pause: 100 },
+                { text: "through", pitch: 1.5, rate: 1.4, pause: 50 },
+                { text: "life!", pitch: 1.8, rate: 1.2, pause: 400 },
+                { text: "Skimming", pitch: 1.3, rate: 1.1, pause: 100 },
+                { text: "the", pitch: 1.2, rate: 1.0, pause: 50 },
+                { text: "surface!", pitch: 1.6, rate: 1.3, pause: 400 },
+                { text: "Gliding", pitch: 1.4, rate: 1.2, pause: 100 },
+                { text: "where turf", pitch: 1.3, rate: 1.0, pause: 100 },
+                { text: "is smooth!", pitch: 1.7, rate: 1.4, pause: 500 },
+                { text: "Life's more", pitch: 1.2, rate: 0.9, pause: 100 },
+                { text: "pain-less,", pitch: 1.4, rate: 1.1, pause: 200 },
+                { text: "for the", pitch: 1.1, rate: 0.95, pause: 100 },
+                { text: "brain-less!", pitch: 1.9, rate: 1.5, pause: 600 },
+                { text: "Why", pitch: 1.0, rate: 0.8, pause: 150 },
+                { text: "think", pitch: 1.1, rate: 0.85, pause: 150 },
+                { text: "too hard?", pitch: 1.3, rate: 0.9, pause: 500 },
+                { text: "When it's", pitch: 1.2, rate: 1.0, pause: 100 },
+                { text: "so", pitch: 1.4, rate: 1.1, pause: 100 },
+                { text: "soothing,", pitch: 1.6, rate: 1.2, pause: 300 },
+                { text: "dan-cing", pitch: 1.5, rate: 1.3, pause: 100 },
+                { text: "through", pitch: 1.7, rate: 1.4, pause: 50 },
+                { text: "life!", pitch: 2.0, rate: 1.6, pause: 200 }
+            ];
+            
+            const voices = speechSynthesis.getVoices();
+            const preferredVoice = voices.find(voice => 
+                voice.name.includes('Samantha') || 
+                voice.name.includes('Karen') || 
+                voice.name.includes('Victoria') ||
+                voice.name.includes('Fiona') ||
+                voice.name.includes('Female')
+            );
+            
+            let cumulativeDelay = 0;
+            lyricPhrases.forEach((phrase) => {
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance(phrase.text);
+                    utterance.pitch = phrase.pitch;
+                    utterance.rate = phrase.rate;
+                    utterance.volume = 0.95;
+                    
+                    if (preferredVoice) {
+                        utterance.voice = preferredVoice;
+                    }
+                    
+                    speechSynthesis.speak(utterance);
+                }, cumulativeDelay);
+                
+                // More natural timing based on syllables and pauses
+                cumulativeDelay += (phrase.text.length * 60) + phrase.pause;
+            });
+        }
+    }
 });
 
 // No button click - Make dogs sad
 noBtn.addEventListener('click', (e) => {
     e.preventDefault();
+    
+    if (isWickedTheme) {
+        handleWickedNoClick();
+        return;
+    }
     
     if (!dogsSad) {
         // First click - make dogs sad
@@ -94,14 +176,193 @@ noBtn.addEventListener('click', (e) => {
     yesBtn.style.animation = 'pulse 0.5s ease-in-out infinite';
 });
 
+// Wicked theme: Evil things happen when you click No!
+function handleWickedNoClick() {
+    if (!dogsSad) {
+        // First click - turn green magic into dark magic
+        document.body.style.background = 'linear-gradient(135deg, #1a1a1a 0%, #2d5016 50%, #000000 100%)';
+        
+        const allDogs = document.querySelectorAll('.dog');
+        allDogs.forEach((dog, index) => {
+            dog.classList.add('melting');
+            const dogEmoji = dog.querySelector('.dog-emoji');
+            if (dogEmoji) {
+                dogEmoji.textContent = '🧙‍♀️';
+                dogEmoji.style.filter = 'grayscale(100%) brightness(0.5)';
+            }
+            const floatingDog = dog.querySelector('.floating-dog-emoji');
+            if (floatingDog) {
+                floatingDog.textContent = '🌑';
+            }
+        });
+        
+        warning.classList.add('show');
+        warning.textContent = '⚠️ You\'ve chosen wickedness! The magic is turning dark! ⚠️';
+        sadOverlay.classList.remove('hidden');
+        
+        noBtn.innerHTML = `
+            Defying Gravity? 🌪️
+            <span class="btn-subtitle">The darkness spreads...</span>
+        `;
+        
+        dogsSad = true;
+        
+        // Sing evil song - dramatic and dark
+        if ('speechSynthesis' in window) {
+            const evilPhrases = [
+                { text: "Something", pitch: 0.6, rate: 0.7, pause: 200 },
+                { text: "has", pitch: 0.65, rate: 0.75, pause: 150 },
+                { text: "changed", pitch: 0.7, rate: 0.8, pause: 300 },
+                { text: "within", pitch: 0.75, rate: 0.85, pause: 150 },
+                { text: "me!", pitch: 0.9, rate: 1.0, pause: 600 },
+                { text: "Something", pitch: 0.6, rate: 0.7, pause: 200 },
+                { text: "is", pitch: 0.65, rate: 0.75, pause: 100 },
+                { text: "not", pitch: 0.7, rate: 0.8, pause: 150 },
+                { text: "the", pitch: 0.75, rate: 0.85, pause: 100 },
+                { text: "same!", pitch: 1.0, rate: 1.2, pause: 800 },
+                { text: "I'm", pitch: 0.7, rate: 0.8, pause: 150 },
+                { text: "through", pitch: 0.75, rate: 0.85, pause: 150 },
+                { text: "with", pitch: 0.8, rate: 0.9, pause: 100 },
+                { text: "playing", pitch: 0.85, rate: 0.95, pause: 150 },
+                { text: "by the", pitch: 0.9, rate: 1.0, pause: 100 },
+                { text: "rules!", pitch: 1.1, rate: 1.3, pause: 500 }
+            ];
+            
+            const voices = speechSynthesis.getVoices();
+            const darkVoice = voices.find(voice => 
+                voice.name.includes('Fiona') ||
+                voice.name.includes('Victoria') ||
+                voice.name.includes('Karen') ||
+                voice.name.includes('Female')
+            );
+            
+            let cumulativeDelay = 500; // Start after the evil laugh
+            evilPhrases.forEach((phrase) => {
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance(phrase.text);
+                    utterance.pitch = phrase.pitch;
+                    utterance.rate = phrase.rate;
+                    utterance.volume = 1.0;
+                    
+                    if (darkVoice) {
+                        utterance.voice = darkVoice;
+                    }
+                    
+                    speechSynthesis.speak(utterance);
+                }, cumulativeDelay);
+                
+                cumulativeDelay += (phrase.text.length * 80) + phrase.pause;
+            });
+        }
+        
+        // Evil laugh sound effect (visual)
+        const evilLaugh = document.createElement('div');
+        evilLaugh.textContent = 'MWAHAHAHA! 🧙‍♀️';
+        evilLaugh.style.position = 'fixed';
+        evilLaugh.style.top = '50%';
+        evilLaugh.style.left = '50%';
+        evilLaugh.style.transform = 'translate(-50%, -50%)';
+        evilLaugh.style.fontSize = '4rem';
+        evilLaugh.style.color = '#2d5016';
+        evilLaugh.style.zIndex = '999';
+        evilLaugh.style.animation = 'evilAppear 2s ease-out forwards';
+        evilLaugh.style.textShadow = '0 0 20px #000';
+        document.body.appendChild(evilLaugh);
+        
+        // Speak the evil laugh
+        if ('speechSynthesis' in window) {
+            const laughUtterance = new SpeechSynthesisUtterance('Mwa ha ha ha ha!');
+            laughUtterance.pitch = 0.5;
+            laughUtterance.rate = 0.6;
+            laughUtterance.volume = 1.0;
+            speechSynthesis.speak(laughUtterance);
+        }
+        
+        setTimeout(() => {
+            evilLaugh.remove();
+        }, 2000);
+        
+    } else {
+        // Second click - full evil mode
+        alert('🧙‍♀️ No good deed goes unpunished! The magic has turned WICKED! Choose good and restore the light!');
+        
+        noBtn.innerHTML = `
+            No One Mourns The Wicked... 💀
+            <span class="btn-subtitle">It's too late!</span>
+        `;
+        
+        // Sing "No Good Deed" - the ultimate evil anthem
+        if ('speechSynthesis' in window) {
+            const noGoodDeedPhrases = [
+                { text: "No", pitch: 0.6, rate: 0.7, pause: 200 },
+                { text: "good", pitch: 0.65, rate: 0.75, pause: 150 },
+                { text: "deed", pitch: 0.7, rate: 0.8, pause: 300 },
+                { text: "goes", pitch: 0.75, rate: 0.85, pause: 150 },
+                { text: "un-punished!", pitch: 0.9, rate: 1.0, pause: 600 },
+                { text: "No", pitch: 0.6, rate: 0.7, pause: 200 },
+                { text: "good", pitch: 0.65, rate: 0.75, pause: 150 },
+                { text: "deed", pitch: 0.7, rate: 0.8, pause: 300 },
+                { text: "goes", pitch: 0.8, rate: 0.9, pause: 150 },
+                { text: "un-punished!", pitch: 1.0, rate: 1.2, pause: 800 },
+                { text: "That's", pitch: 0.7, rate: 0.8, pause: 150 },
+                { text: "my", pitch: 0.75, rate: 0.85, pause: 150 },
+                { text: "new", pitch: 0.8, rate: 0.9, pause: 150 },
+                { text: "creed!", pitch: 1.1, rate: 1.3, pause: 500 }
+            ];
+            
+            const voices = speechSynthesis.getVoices();
+            const darkVoice = voices.find(voice => 
+                voice.name.includes('Fiona') ||
+                voice.name.includes('Victoria') ||
+                voice.name.includes('Karen')
+            );
+            
+            let cumulativeDelay = 0;
+            noGoodDeedPhrases.forEach((phrase) => {
+                setTimeout(() => {
+                    const utterance = new SpeechSynthesisUtterance(phrase.text);
+                    utterance.pitch = phrase.pitch;
+                    utterance.rate = phrase.rate;
+                    utterance.volume = 1.0;
+                    
+                    if (darkVoice) {
+                        utterance.voice = darkVoice;
+                    }
+                    
+                    speechSynthesis.speak(utterance);
+                }, cumulativeDelay);
+                
+                cumulativeDelay += (phrase.text.length * 80) + phrase.pause;
+            });
+        }
+        
+        // Turn all emojis dark
+        const allDogs = document.querySelectorAll('.dog');
+        allDogs.forEach((dog) => {
+            const dogEmoji = dog.querySelector('.dog-emoji');
+            if (dogEmoji) {
+                dogEmoji.textContent = '💀';
+                dogEmoji.style.filter = 'grayscale(100%) hue-rotate(90deg)';
+            }
+        });
+    }
+    
+    // Make Yes button glow green (Popular/Good)
+    yesBtn.style.transform = 'scale(1.4)';
+    yesBtn.style.animation = 'wickedGlow 0.5s ease-in-out infinite';
+    yesBtn.style.boxShadow = '0 0 30px #22c55e, 0 0 60px #22c55e';
+}
+
 function makeDogsSad() {
     const allDogs = document.querySelectorAll('.dog');
+    const sadEmojis = isWickedTheme ? wickedSadEmojis : sadDogEmojis;
+    
     allDogs.forEach((dog, index) => {
         dog.classList.add('sad');
         // Change to sad dog emoji
         const dogEmoji = dog.querySelector('.dog-emoji');
         if (dogEmoji) {
-            dogEmoji.textContent = sadDogEmojis[index % sadDogEmojis.length];
+            dogEmoji.textContent = sadEmojis[index % sadEmojis.length];
         }
     });
     
@@ -114,12 +375,14 @@ function makeDogsSad() {
 
 function restoreDogs() {
     const allDogs = document.querySelectorAll('.dog');
+    const happyEmojis = isWickedTheme ? wickedHappyEmojis : happyDogEmojis;
+    
     allDogs.forEach((dog, index) => {
         dog.classList.remove('sad');
         // Change back to happy dog emoji
         const dogEmoji = dog.querySelector('.dog-emoji');
         if (dogEmoji) {
-            dogEmoji.textContent = happyDogEmojis[index % happyDogEmojis.length];
+            dogEmoji.textContent = happyEmojis[index % happyEmojis.length];
         }
     });
     
@@ -133,10 +396,13 @@ function restoreDogs() {
 // Create happy dogs for celebration
 function createHappyDogs() {
     happyDogsContainer.innerHTML = '';
-    for (let i = 0; i < 20; i++) {
+    const celebrationEmojis = isWickedTheme ? ['💚', '✨', '🎭', '🌟', '💫', '🎪', '⭐', '🌈'] : happyDogEmojis;
+    const celebrationCount = isWickedTheme ? 25 : 20;
+    
+    for (let i = 0; i < celebrationCount; i++) {
         const dog = document.createElement('div');
         dog.className = 'happy-dog';
-        dog.textContent = happyDogEmojis[i % happyDogEmojis.length];
+        dog.textContent = celebrationEmojis[i % celebrationEmojis.length];
         dog.style.animationDelay = `${Math.random() * 1}s`;
         happyDogsContainer.appendChild(dog);
     }

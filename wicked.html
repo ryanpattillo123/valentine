@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Galentine? 💚✨</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Would you be my Galentine? �✨</h1>
+        <p class="subtitle">The magic awaits your answer...</p>
+        
+        <div class="magic-container" id="dogsContainer">
+            <!-- Wicked-themed emojis will be generated here -->
+        </div>
+
+        <div class="button-container">
+            <button id="yesBtn" class="btn yes-btn">
+                Popular! 💚
+                <span class="btn-subtitle">Choose good! 💚</span>
+            </button>
+            <button id="noBtn" class="btn no-btn">
+                Wicked...
+                <span class="btn-subtitle">Choose evil... 🖤</span>
+            </button>
+        </div>
+
+        <div class="warning" id="warning">
+            ⚠️ The magic is fading! Choose good to restore it! ⚠️
+        </div>
+    </div>
+    
+    <!-- Happy ending overlay -->
+    <div id="celebration" class="celebration hidden">
+        <div class="celebration-content">
+            <h1>YAAAY! 🎉💚🎊</h1>
+            <p>You're wonderful! We're dancing through life together! 💚✨🎭</p>
+            <div class="happy-magic" id="happyDogs">
+                <!-- Happy celebration emojis will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Sad overlay when clicking No -->
+    <div id="sadOverlay" class="sad-overlay hidden">
+        <p class="sad-message">The darkness is spreading... 😢</p>
+    </div>
+
+    <!-- Audio element for celebration -->
+    <audio id="celebrationAudio" preload="auto">
+        <!-- You can add your audio file here -->
+        <source src="https://www.bensound.com/bensound-music/bensound-happyrock.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="router.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
