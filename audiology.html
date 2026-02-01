@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine? 🎧👂</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Will you be my Valentine? 🎧💝</h1>
+        <p class="subtitle">Can you hear how much I care?</p>
+        
+        <div class="audiology-container" id="dogsContainer">
+            <!-- Audiology-themed emojis will be generated here -->
+        </div>
+
+        <div class="button-container">
+            <button id="yesBtn" class="btn yes-btn">
+                YES! 🎧
+                <span class="btn-subtitle">Perfect hearing! 💕</span>
+            </button>
+            <button id="noBtn" class="btn no-btn">
+                No... 👂
+                <span class="btn-subtitle">Wait, what did you say?</span>
+            </button>
+        </div>
+
+        <div class="warning" id="warning">
+            ⚠️ The sounds are fading! Say yes to restore perfect hearing! ⚠️
+        </div>
+    </div>
+    
+    <!-- Happy ending overlay -->
+    <div id="celebration" class="celebration hidden">
+        <div class="celebration-content">
+            <h1>PERFECT AUDIOGRAM! 🎉🎧🎊</h1>
+            <p>Your hearing is crystal clear - and so is my love for you! 💕👂</p>
+            <div class="happy-audiology" id="happyDogs">
+                <!-- Happy celebration emojis will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Sad overlay when clicking No -->
+    <div id="sadOverlay" class="sad-overlay hidden">
+        <p class="sad-message">The frequencies are dropping... 😢</p>
+    </div>
+
+    <!-- NU-6 Hearing Test Overlay -->
+    <div id="hearingTest" class="hearing-test-overlay hidden">
+        <div class="hearing-test-content">
+            <h2>NU-6 Word Recognition Test 🎧</h2>
+            <p class="test-instructions">Before you can say "No", you must pass this hearing test!</p>
+            <p class="test-instructions">Listen carefully and type what you hear...</p>
+            
+            <div class="test-progress">
+                <p>Word <span id="currentWord">1</span> of 10</p>
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+            </div>
+            
+            <div class="test-word-display">
+                <button id="playWordBtn" class="play-word-btn">🔊 Play Word</button>
+                <p id="wordDisplay" class="word-display">Click to hear the word</p>
+            </div>
+            
+            <div class="test-input">
+                <input type="text" id="wordInput" placeholder="Type what you hear..." autocomplete="off">
+                <button id="submitWordBtn" class="submit-word-btn">Submit</button>
+            </div>
+            
+            <div class="test-feedback" id="testFeedback"></div>
+            
+            <p class="test-score">Score: <span id="testScore">0</span>/10</p>
+        </div>
+    </div>
+
+    <script src="router.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

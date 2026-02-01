@@ -37,6 +37,17 @@ const routes = {
         celebrationText: 'You\'re wonderful! We\'re dancing through life together! 💚✨🎭',
         theme: 'wicked',
         containerLabel: 'The magic awaits your answer...'
+    },
+    'audiology': {
+        name: 'Audiologist',
+        dogCount: 12,
+        message: 'Will you be my Valentine? 🎧💝',
+        subtitle: 'Can you hear how much I care?',
+        yesText: 'YES! 🎧',
+        noText: 'No... 👂',
+        celebrationText: 'Perfect audiogram! Your hearing is crystal clear - and so is my love for you! 💕👂',
+        theme: 'audiology',
+        containerLabel: 'Can you hear how much I care?'
     }
 };
 
@@ -108,6 +119,22 @@ function personalizePage() {
         
         // Apply Wicked theme to body
         document.body.classList.add('wicked-theme');
+    } else if (config.theme === 'audiology') {
+        // Audiology theme customization
+        yesBtn.innerHTML = `
+            ${config.yesText}
+            <span class="btn-subtitle">Perfect hearing! 💕</span>
+        `;
+        yesBtn.classList.add('audiology-yes-btn');
+        
+        noBtn.innerHTML = `
+            ${config.noText}
+            <span class="btn-subtitle">Wait, what did you say?</span>
+        `;
+        noBtn.classList.add('audiology-no-btn');
+        
+        // Apply Audiology theme to body
+        document.body.classList.add('audiology-theme');
     } else {
         yesBtn.innerHTML = `
             ${config.yesText}
@@ -126,6 +153,7 @@ function personalizePage() {
     // Create dogs with custom count
     window.initialDogCount = config.dogCount;
     window.wickedTheme = config.theme === 'wicked';
+    window.audiologyTheme = config.theme === 'audiology';
     
     // Update page title
     document.title = `Be My Valentine, ${config.name}? 🐶💝`;

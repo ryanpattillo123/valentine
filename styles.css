@@ -502,3 +502,183 @@ body {
         padding: 0 20px;
     }
 }
+
+/* Audiology Theme Styles */
+.audiology-theme {
+    background: linear-gradient(135deg, #e3f2fd 0%, #90caf9 50%, #64b5f6 100%);
+}
+
+.audiology-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    min-height: 250px;
+    margin: 30px 0;
+    padding: 20px;
+}
+
+.audiology-yes-btn {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+}
+
+.audiology-yes-btn:hover {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    transform: scale(1.1);
+}
+
+.audiology-no-btn {
+    background: linear-gradient(135deg, #90caf9 0%, #64b5f6 100%);
+}
+
+/* NU-6 Hearing Test Overlay */
+.hearing-test-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.95);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.hearing-test-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.hearing-test-content {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.hearing-test-content h2 {
+    color: #2196f3;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.test-instructions {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.test-progress {
+    margin: 20px 0;
+}
+
+.test-progress p {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2196f3, #1976d2);
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+.test-word-display {
+    text-align: center;
+    margin: 30px 0;
+}
+
+.play-word-btn {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 15px;
+}
+
+.play-word-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(33, 150, 243, 0.4);
+}
+
+.word-display {
+    color: #666;
+    font-size: 1.1rem;
+    margin-top: 10px;
+    font-style: italic;
+}
+
+.test-input {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.test-input input {
+    flex: 1;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    transition: border-color 0.3s ease;
+}
+
+.test-input input:focus {
+    outline: none;
+    border-color: #2196f3;
+}
+
+.submit-word-btn {
+    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submit-word-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 20px rgba(76, 175, 80, 0.4);
+}
+
+.test-feedback {
+    min-height: 80px;
+    text-align: center;
+    font-size: 1.1rem;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.test-score {
+    text-align: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #2196f3;
+    margin-top: 20px;
+}

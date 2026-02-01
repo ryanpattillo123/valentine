@@ -16,13 +16,28 @@ const wickedHappyEmojis = ['💚', '✨', '🎭', '🌟', '💫', '🎪'];
 const wickedSadEmojis = ['🧙‍♀️', '🖤', '💀', '🌑'];
 const wickedFloatingEmojis = ['🧹', '🔮', '⚡', '🌪️'];
 
+// Audiology theme emojis
+const audiologyHappyEmojis = ['🎧', '👂', '🔊', '🎵', '🎶', '📢'];
+const audiologySadEmojis = ['🔇', '😶', '🙉', '❌'];
+const audiologyFloatingEmojis = ['🎼', '🎤', '📻', '🔉'];
+
 // Create initial happy dogs
 function createDogs(count) {
     dogsContainer.innerHTML = '';
     
-    // Use Wicked emojis if it's the Wicked theme
-    const mainEmojis = isWickedTheme ? wickedHappyEmojis : happyDogEmojis;
-    const floatEmojis = isWickedTheme ? wickedFloatingEmojis : floatingDogEmojis;
+    // Use Wicked emojis if it's the Wicked theme, Audiology emojis if audiology theme
+    let mainEmojis, floatEmojis;
+    
+    if (isWickedTheme) {
+        mainEmojis = wickedHappyEmojis;
+        floatEmojis = wickedFloatingEmojis;
+    } else if (isAudiologyTheme) {
+        mainEmojis = audiologyHappyEmojis;
+        floatEmojis = audiologyFloatingEmojis;
+    } else {
+        mainEmojis = happyDogEmojis;
+        floatEmojis = floatingDogEmojis;
+    }
     
     for (let i = 0; i < count; i++) {
         const dog = document.createElement('div');
@@ -47,11 +62,13 @@ function createDogs(count) {
 // Initialize with custom dog count (set by router.js) or default to 8
 let initialDogCount = 8;
 let isWickedTheme = false;
+let isAudiologyTheme = false;
 
 // Wait for initialization
 window.addEventListener('DOMContentLoaded', () => {
     initialDogCount = window.initialDogCount || 8;
     isWickedTheme = window.wickedTheme || false;
+    isAudiologyTheme = window.audiologyTheme || false;
     createDogs(initialDogCount);
 });
 
@@ -137,6 +154,11 @@ noBtn.addEventListener('click', (e) => {
     
     if (isWickedTheme) {
         handleWickedNoClick();
+        return;
+    }
+    
+    if (isAudiologyTheme) {
+        handleAudiologyNoClick();
         return;
     }
     
@@ -471,3 +493,223 @@ dogsContainer.addEventListener('click', (e) => {
         }, 1000);
     }
 });
+
+// NU-6 Hearing Test for Audiology Theme
+const nu6Words = [
+    'goal', 'day', 'jar', 'toe', 'tan',
+    'sub', 'poor', 'nag', 'king', 'say',
+    'mob', 'nice', 'food', 'voice', 'rath',
+    'gap', 'bite', 'sheep', 'match', 'puff'
+];
+
+let currentTestWord = 0;
+let testScore = 0;
+let testWords = [];
+let hasPassedTest = false;
+
+function startHearingTest() {
+    // Select 10 random words from NU-6 list
+    testWords = [];
+    const shuffled = [...nu6Words].sort(() => Math.random() - 0.5);
+    testWords = shuffled.slice(0, 10);
+    
+    currentTestWord = 0;
+    testScore = 0;
+    hasPassedTest = false;
+    
+    const hearingTestOverlay = document.getElementById('hearingTest');
+    hearingTestOverlay.classList.remove('hidden');
+    
+    document.getElementById('testScore').textContent = '0';
+    document.getElementById('currentWord').textContent = '1';
+    document.getElementById('progressFill').style.width = '0%';
+    document.getElementById('testFeedback').textContent = '';
+    document.getElementById('wordInput').value = '';
+    document.getElementById('wordDisplay').textContent = 'Click to hear the word';
+    
+    setupTestControls();
+}
+
+function setupTestControls() {
+    const playBtn = document.getElementById('playWordBtn');
+    const submitBtn = document.getElementById('submitWordBtn');
+    const wordInput = document.getElementById('wordInput');
+    
+    // Remove old listeners
+    const newPlayBtn = playBtn.cloneNode(true);
+    playBtn.parentNode.replaceChild(newPlayBtn, playBtn);
+    const newSubmitBtn = submitBtn.cloneNode(true);
+    submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
+    
+    // Play word with text-to-speech
+    newPlayBtn.addEventListener('click', () => {
+        if (currentTestWord < testWords.length) {
+            const word = testWords[currentTestWord];
+            
+            if ('speechSynthesis' in window) {
+                speechSynthesis.cancel(); // Stop any playing speech
+                
+                const utterance = new SpeechSynthesisUtterance(word);
+                utterance.rate = 0.8;
+                utterance.pitch = 1.0;
+                utterance.volume = 1.0;
+                
+                speechSynthesis.speak(utterance);
+                
+                document.getElementById('wordDisplay').textContent = '🔊 Playing...';
+                setTimeout(() => {
+                    document.getElementById('wordDisplay').textContent = 'Type what you heard';
+                }, 1000);
+            }
+        }
+    });
+    
+    // Submit answer
+    newSubmitBtn.addEventListener('click', checkAnswer);
+    wordInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            checkAnswer();
+        }
+    });
+}
+
+function checkAnswer() {
+    const wordInput = document.getElementById('wordInput');
+    const userAnswer = wordInput.value.toLowerCase().trim();
+    const correctWord = testWords[currentTestWord];
+    const feedback = document.getElementById('testFeedback');
+    
+    if (!userAnswer) {
+        feedback.textContent = '⚠️ Please type your answer';
+        feedback.style.color = '#ff6b6b';
+        return;
+    }
+    
+    if (userAnswer === correctWord) {
+        testScore++;
+        feedback.textContent = '✅ Correct!';
+        feedback.style.color = '#51cf66';
+    } else {
+        feedback.textContent = `❌ Incorrect. The word was "${correctWord}"`;
+        feedback.style.color = '#ff6b6b';
+    }
+    
+    document.getElementById('testScore').textContent = testScore;
+    
+    currentTestWord++;
+    
+    if (currentTestWord < testWords.length) {
+        // Next word
+        setTimeout(() => {
+            document.getElementById('currentWord').textContent = currentTestWord + 1;
+            document.getElementById('progressFill').style.width = ((currentTestWord / testWords.length) * 100) + '%';
+            wordInput.value = '';
+            feedback.textContent = '';
+            document.getElementById('wordDisplay').textContent = 'Click to hear the word';
+        }, 1500);
+    } else {
+        // Test complete
+        setTimeout(() => {
+            completeTest();
+        }, 1500);
+    }
+}
+
+function completeTest() {
+    const feedback = document.getElementById('testFeedback');
+    const hearingTestOverlay = document.getElementById('hearingTest');
+    
+    document.getElementById('progressFill').style.width = '100%';
+    
+    if (testScore >= 8) {
+        // Passed - 80% or better
+        hasPassedTest = true;
+        feedback.innerHTML = `
+            <h3 style="color: #51cf66;">🎉 Test Passed!</h3>
+            <p>You got ${testScore}/10 correct (${testScore * 10}%)</p>
+            <p>Your hearing is excellent! But maybe you should say YES instead? 💕</p>
+        `;
+        
+        setTimeout(() => {
+            hearingTestOverlay.classList.add('hidden');
+            alert('You passed the hearing test! But are you sure you want to say No? 😢');
+        }, 3000);
+    } else {
+        // Failed - must retake
+        feedback.innerHTML = `
+            <h3 style="color: #ff6b6b;">😢 Test Failed</h3>
+            <p>You got ${testScore}/10 correct (${testScore * 10}%)</p>
+            <p>You need 80% to pass. Let's try again with different words!</p>
+        `;
+        
+        setTimeout(() => {
+            startHearingTest();
+        }, 3000);
+    }
+}
+
+// Audiology theme: Hearing test before you can say No
+function handleAudiologyNoClick() {
+    if (!hasPassedTest) {
+        startHearingTest();
+        return;
+    }
+    
+    // If test passed, proceed with sad response
+    if (!dogsSad) {
+        // First click - make emojis sad
+        document.body.style.background = 'linear-gradient(135deg, #e3f2fd 0%, #90caf9 50%, #64b5f6 100%)';
+        
+        const allDogs = document.querySelectorAll('.dog');
+        allDogs.forEach((dog) => {
+            const dogEmoji = dog.querySelector('.dog-emoji');
+            if (dogEmoji) {
+                dogEmoji.textContent = audiologySadEmojis[Math.floor(Math.random() * audiologySadEmojis.length)];
+            }
+            const floatingDog = dog.querySelector('.floating-dog-emoji');
+            if (floatingDog) {
+                floatingDog.style.display = 'none';
+            }
+        });
+        
+        warning.classList.add('show');
+        warning.textContent = '⚠️ The sounds are fading! Say yes to restore perfect hearing! ⚠️';
+        sadOverlay.classList.remove('hidden');
+        
+        noBtn.innerHTML = `
+            Still No? 🔇
+            <span class="btn-subtitle">The silence is deafening...</span>
+        `;
+        
+        dogsSad = true;
+        
+        // Play fading sound effect with speech
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance('The frequencies are dropping... I can barely hear you...');
+            utterance.pitch = 0.7;
+            utterance.rate = 0.7;
+            utterance.volume = 0.5;
+            speechSynthesis.speak(utterance);
+        }
+    } else {
+        // Second click
+        alert('🔇 The silence is deafening! Maybe you should say YES and restore the sound! 🎧💕');
+        
+        noBtn.innerHTML = `
+            Complete Hearing Loss... 🙉
+            <span class="btn-subtitle">Say YES!</span>
+        `;
+        
+        const allDogs = document.querySelectorAll('.dog');
+        allDogs.forEach((dog) => {
+            const dogEmoji = dog.querySelector('.dog-emoji');
+            if (dogEmoji) {
+                dogEmoji.textContent = '🔇';
+            }
+        });
+    }
+    
+    // Make Yes button stand out
+    yesBtn.style.transform = 'scale(1.4)';
+    yesBtn.style.animation = 'pulse 0.5s ease-in-out infinite';
+}
