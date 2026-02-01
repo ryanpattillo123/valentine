@@ -43,21 +43,28 @@ const routes = {
 // Get the person from URL path
 function getPersonFromPath() {
     const path = window.location.pathname;
+    console.log('DEBUG: Current path:', path);
     const match = path.match(/\/([^\/]+)/);
+    console.log('DEBUG: Match:', match);
     if (match && match[1]) {
         const person = match[1].toLowerCase().replace('.html', '');
+        console.log('DEBUG: Detected person:', person);
         return person;
     }
+    console.log('DEBUG: No person detected, using default');
     return null;
 }
 
 // Get route config or default
 function getRouteConfig() {
     const person = getPersonFromPath();
+    console.log('DEBUG: Looking for route config for:', person);
     if (person && routes[person]) {
+        console.log('DEBUG: Found route config:', routes[person]);
         return routes[person];
     }
     // Default config
+    console.log('DEBUG: Using default config');
     return {
         name: 'Someone Special',
         dogCount: 8,
